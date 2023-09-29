@@ -1,58 +1,43 @@
-import Secret from "../models/secret.js";
-import bcrypt from 'bcryptjs';
+import collection from "../models/secret.js";
+// import bcrypt from 'bcryptjs';
 
 export const getSecret = async(req, res, next) => {
-    let secret;
-    try {
-        secret = await Secret.find().then(secret => secret);
-    } catch (err) {
-        console.log(err)
-    }
+    
+    const secret = await collection.find().then(secret => secret);
+
     if (!secret) {
         return res.status(404).json({message: "missing secret please create one"})
-
     }
-    if (secret.remainingViews == 0)
+    if (secret.remainingViews === 0)
         return res.status(404).json({message: "sorry too many people have viewed the secret"})
     const today = new Date();
-    if ((today > secret.expiredDate) && secret.expiredDate != 0)
+    if ((today > secret.expiredDate) && secret.expiredDate !== 0)
         return res.status(404).json({message: "Sorry the secret is no longer available"})
     secret.remainingViews -= 1;
-    // await secret.save();
     return res.status(200).json({ secret });
+    next();
 };
 
 export const addSecret = async(req, res, next) => {
+    // console.log("request body is:", req.body);
     const { remainingViews, expiredDate, secret} = req.body;
-
-    let existingSecret;
-    let hashedSecret;
-
-    try {
-        existingSecret = await Secret.findOne({ secret });
-    }
-    catch (err){
-        return console.log(err);
+    /*const hashedSecret = await bcrypt.hashSync(secret); */
+//    const hashedSecret = "stuff"
+   const secrets = {
+        // hash: bcrypt.hashSync(secret),
+        secret: secret,
+        remainingViews: remainingViews,
+        expiredDate: expiredDate,
     }
    
-    const secrets = new Secret ({
-        hash: hashedSecret,
-        secret,
-        remainingViews,
-        expiredDate,
+    const existingSecret = await collection.create(secrets);
+    
+    return res.status(200).json({
+        hash: secrets.hash,
+        secretText: secret,
+        createdDate: existingSecret.createdDate,
+        expiredDate: existingSecret.expiredDate,
+        remainingViews: existingSecret.remainingViews
     });
-    if (!existingSecret)
-    {
-    // hashedSecret = await bcrypt.hashSync(secret);
-        // existingSecret = await secrets
-        try {
-            await secrets.save();
-        } catch (err) {
-           return console.log(err);
-        }
-        return res.status(404).json({message: "Secret created"})
-    }
-    else
-        return res.status(200).json({ secrets }
-    );
+    next();
 };

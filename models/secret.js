@@ -11,7 +11,7 @@ const secretSchema = new Schema({
     secret: { 
         // type: mongoose.Schema.Types.Mixed,
         type: String,
-        required: true,
+        required: false,
     },
     remainingViews: {
         type: Number,
@@ -27,4 +27,5 @@ const secretSchema = new Schema({
     }
 });
 
-export default mongoose.model("Secret", secretSchema);
+const Secrets=mongoose.model("Secret", secretSchema);
+export default Secrets
