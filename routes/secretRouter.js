@@ -6,14 +6,13 @@ const router = express.Router()
 // const Secret = require("../models/secret.js")
 router.get("/", (req, res) => {
     Secrets.find()
-        .then(secrets => res.json(secrets))
+        .then(Secrets => res.json(Secrets))
         .catch(err => res.status(404).json({nosecretfound: 'No Secret Found'}));
 });
 
 router.post("/", (req, res) => {
     Secrets.create(req.body)
-        .then(secrets => res.json({msg: 'Secret added succesfully!'}))
-        .then(console.log(Secrets))
+        .then(secret => res.json({msg: 'Secret added succesfully!'}))
         .catch(err => res.status(400).json({error: 'Unable to add secret!'}))
 })
 

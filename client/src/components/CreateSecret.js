@@ -1,8 +1,6 @@
 import React, {useState} from "react"
 // import { Link } from "react-router-dom";
 import axios from 'axios'
-// import '../App.css';
-// import { useNavigate } from "react"
 import { useNavigate } from "react-router-dom";
 
 const CreateSecret = (props) => {
@@ -10,12 +8,20 @@ const CreateSecret = (props) => {
     const navigate = useNavigate()
     const [data, setData] = useState({
         secret: '',
-        numberOfViews: '',
+        remainingViews: '',
     });
 
     const onChange = (e) => {
-        setData({...data, [e.target.name]: e.target.value})
-    }
+        //const {name, value} = e.target;
+        setData({...data, [e.target.name]: e.target.value});
+        /*
+        setData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+        }));
+        */
+    };
+
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -24,8 +30,9 @@ const CreateSecret = (props) => {
             .then((res) => {
                 setData({
                     secret: '',
-                    numberOfViews: '',
+                    remainingViews: '',
                 });
+
                 navigate('/');
             })
             .catch((err) => {
@@ -36,16 +43,60 @@ const CreateSecret = (props) => {
         <div>
             <h1>Write a secret</h1>
 
-             <form>
-                {/* <Link to="/">
-                    Show Secrets
-                </Link> */}
-                <input type="text" name="secretInput" value={setData.secret} onChange={onChange} />
-                <input type="text" name="viewInput" value={setData.numberOfViews} onChange={onChange} />
-                <input type="submit" value="Submit"/>
+             <form noValidate onSubmit={onSubmit}>
+                <input type="text" name="secret" value={data.secret} onChange={onChange} />
+                <input type="text" name="remainingviews" defaultValue={data.remainingViews} onChange={onChange} />
+                <input type="submit" onChange={onChange} />
             </form>
         </div>
     )
 }
 
+/*
+const CreateSecret = (props) => {
+    const [data, setData] = useState({
+        secret: '',
+        remainingViews: '',
+    });
+
+    const handleInputChange = (e) => {
+        const {name, value} = e.target;
+        setData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        axios
+            .post('http://localhost:8001/api/secrets', data)
+            .then((res) => {
+                //const {name, value} = e.target;
+                setData({
+                    secret: '',
+                    remainingViews: '',
+                });
+
+                navigate('/');
+            })
+            .catch((err) => {
+                console.log('Error with secret!');
+            });
+    };
+
+    return (
+        <div>
+            <h1>Write a secret</h1>
+
+             <form noValidate onSubmit={handleSubmit}>
+                <input type="text" name="secret" value={data.secret} onChange={handleInputChange} />
+                <input type="text" name="remainingviews" defaultValue={data.remainingViews} onChange={handleInputChange} />
+                <input type="submit" onChange={handleInputChange} />
+            </form>
+        </div>
+    )
+}
+*/
 export default CreateSecret;
