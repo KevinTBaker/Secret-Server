@@ -1,5 +1,4 @@
 import React, {useState} from "react"
-// import { Link } from "react-router-dom";
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 
@@ -12,14 +11,7 @@ const CreateSecret = (props) => {
     });
 
     const onChange = (e) => {
-        //const {name, value} = e.target;
         setData({...data, [e.target.name]: e.target.value});
-        /*
-        setData((prevFormData) => ({
-            ...prevFormData,
-            [name]: value,
-        }));
-        */
     };
 
     const onSubmit = (e) => {
@@ -45,7 +37,7 @@ const CreateSecret = (props) => {
 
              <form noValidate onSubmit={onSubmit}>
                 <input type="text" name="secret" value={data.secret} onChange={onChange} />
-                <input type="text" name="remainingviews" defaultValue={data.remainingViews} onChange={onChange} />
+                <input type="text" name="remainingViews" defaultValue={data.remainingViews} onChange={onChange} />
                 <input type="submit" onChange={onChange} />
             </form>
         </div>
