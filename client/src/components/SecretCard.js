@@ -6,7 +6,9 @@ const SecretCard = (props) => {
 
     return (
         <div>
-            <h3>{secret.secret}</h3>
+            <h2>
+                {secret.secret}
+            </h2>
         </div>
     );
 };

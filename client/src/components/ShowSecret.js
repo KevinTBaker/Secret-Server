@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link , useParams} from 'react-router-dom';
 import SecretCard from './SecretCard';
 
 function ShowSecret() {
@@ -8,7 +8,7 @@ function ShowSecret() {
 
     useEffect(() => {
         axios
-            .get('http://localhost:8001/api/secrets')
+            .get('http://localhost:8001/api/secrets/')
             .then((res) => {
                 setDatas(res.data);
             })
@@ -16,8 +16,9 @@ function ShowSecret() {
                 console.log('Error from secret list');
             });
     }, []);
+    
 
-    const secretList = 
+    const secretList =
         datas.length === 0
             ? 'there arent any secrets!'
             : datas.map((secret, k) => <SecretCard secret={secret} key={k} />);
@@ -25,6 +26,9 @@ function ShowSecret() {
     return (
         <div>
             <Link to='/create-secret'>+Add New Secret</Link>
+            <form>
+                <input placeholder="Enter a hash here"/>
+            </form>
         <div className='list'>{secretList}</div>
         </div>
     );
